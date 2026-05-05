@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Disc That Ruled the World</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-0:         #070012;
+  --bg-1:         #0e0028;
+  --bg-2:         #140040;
+  --cyan:         #00e5ff;
+  --cyan-pale:    rgba(0,229,255,0.12);
+  --pink:         #ff4db8;
+  --pink-pale:    rgba(255,77,184,0.12);
+  --purple:       #a855f7;
+  --chrome:       #dde0f0;
+  --glass-bg:     rgba(14,0,40,0.60);
+  --glass-border: rgba(0,229,255,0.18);
+  --glass-shadow: rgba(0,229,255,0.10);
+  --cd:           #ff3a5c;
+  --cd-deep:      #ff8aaa;
+  --cd-glow:      rgba(255,58,92,0.4);
+  --cd-pale:      rgba(255,58,92,0.12);
+  --vinyl:        #a855f7;
+  --cassette:     #ffd60a;
+  --eight:        #ff8c42;
+  --dl:           #00e5a0;
+  --leaf:         #00e5a0;
+  --stream:       #ff4db8;
+  --text-dark:    #eef0ff;
+  --text-mid:     #a0aac8;
+  --text-muted:   #505880;
+  --text-light:   #28325a;
+  --aqua:         #00e5ff;
+  --aqua-deep:    #00e5ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(160deg, var(--bg-0) 0%, var(--bg-1) 55%, var(--bg-2) 100%);
+  background-attachment: fixed;
+  color: var(--text-dark);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 700px 300px at 15% 20%, rgba(0,229,255,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 220px at 82% 12%, rgba(168,85,247,0.09) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 260px at 55% 75%, rgba(255,77,184,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 180px at 8% 78%, rgba(0,229,255,0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(0,229,255,0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.45;
+}
+.nav-dots {
+  position: fixed; right: 1.4rem; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 0.65rem; z-index: 300;
+}
+.nav-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(0,229,255,0.10);
+  border: 1px solid rgba(0,229,255,0.35);
+  cursor: pointer; transition: all 0.25s;
+}
+.nav-dot.active {
+  background: var(--cyan); transform: scale(1.5);
+  box-shadow: 0 0 12px var(--cyan), 0 0 28px rgba(0,229,255,0.35);
+}
+.section {
+  min-height: 100vh; display: flex;
+  align-items: center; justify-content: center;
+  padding: 5rem 2rem; position: relative; z-index: 1;
+}
+.section-inner { max-width: 1100px; width: 100%; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+@media(max-width:768px){ .two-col { grid-template-columns: 1fr; } }
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px var(--glass-shadow), 0 0 0 1px rgba(0,229,255,0.06), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.glass-red {
+  background: rgba(20,0,40,0.62);
+  border: 1px solid rgba(255,58,92,0.22);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(255,58,92,0.08), 0 0 0 1px rgba(255,58,92,0.06), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+#hero {
+  height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative; overflow: hidden; z-index: 1;
+}
+#disc-hero {
+  position: absolute; width: 540px; height: 540px; border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #00e5ff 0%, #e0e8ff 5%,
+    #ff4db8 10%, #ff3a5c 13%, #ff8c42 16%,
+    #ffd60a 21%, #00e5a0 26%,
+    #00e5ff 32%, #a855f7 37%,
+    #ff4db8 42%, #ff3a5c 46%, #e0e8ff 50%,
+    #00e5ff 55%, #a855f7 60%,
+    #e8e8ff 66%, #ff4db8 72%,
+    #ff3a5c 77%, #00e5a0 80%, #a855f7 83%,
+    #00e5ff 88%, #e0e8ff 94%, #ff4db8 100%
+  );
+  opacity: 0.88; animation: spin 18s linear infinite;
+  box-shadow: 0 0 120px rgba(0,229,255,0.28), 0 0 60px rgba(255,77,184,0.2), 0 0 200px rgba(168,85,247,0.14);
+}
+#disc-hero::before {
+  content: ''; position: absolute; inset: 40px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow:
+    0 0 0 20px rgba(0,229,255,0.04), 0 0 0 40px rgba(168,85,247,0.04),
+    0 0 0 60px rgba(255,77,184,0.03), 0 0 0 80px rgba(0,229,255,0.03),
+    0 0 0 100px rgba(168,85,247,0.02);
+}
+#disc-hero::after {
+  content: ''; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%); width: 68px; height: 68px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #1a0040, #070012);
+  border: 2px solid rgba(0,229,255,0.4);
+  box-shadow: 0 0 20px rgba(0,229,255,0.4), inset 0 0 10px rgba(0,229,255,0.15);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#hero-content { position: relative; z-index: 2; text-align: center; }
+.hero-eyebrow {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.58rem; letter-spacing: 0.3em; color: var(--cyan);
+  text-transform: uppercase; font-weight: 700; margin-bottom: 1.2rem;
+  background: rgba(0,229,255,0.08); display: inline-block;
+  padding: 0.35rem 1.2rem; border-radius: 40px;
+  border: 1px solid rgba(0,229,255,0.22); backdrop-filter: blur(8px);
+}
+h1.hero-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.7rem, 5vw, 3.6rem); font-weight: 900;
+  line-height: 1.14; color: var(--chrome); margin-bottom: 0.5rem;
+  text-shadow: 0 0 40px rgba(0,229,255,0.3), 0 0 80px rgba(0,229,255,0.12);
+  letter-spacing: 0.02em;
+}
+h1.hero-title em { font-style: normal; color: var(--cyan); text-shadow: 0 0 30px rgba(0,229,255,0.7), 0 0 60px rgba(0,229,255,0.3); }
+.hero-sub { font-size: 0.88rem; color: var(--text-mid); margin-top: 1.3rem; font-weight: 600; }
+.scroll-hint {
+  position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+  color: var(--cyan); font-size: 0.52rem; letter-spacing: 0.32em; font-weight: 700;
+  animation: bounce 2s ease-in-out infinite; z-index: 2;
+  font-family: 'Orbitron', sans-serif;
+}
+.scroll-hint::after {
+  content: ''; display: block; width: 1px; height: 38px;
+  background: linear-gradient(var(--cyan), transparent);
+  box-shadow: 0 0 8px rgba(0,229,255,0.6);
+}
+@keyframes bounce {
+  0%,100%{ transform: translateX(-50%) translateY(0); }
+  50%    { transform: translateX(-50%) translateY(8px); }
+}
+.chapter-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.52rem; letter-spacing: 0.28em; color: var(--cyan);
+  text-transform: uppercase; font-weight: 700; margin-bottom: 0.8rem;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+}
+.chapter-label::before {
+  content: ''; display: inline-block; width: 20px; height: 1px;
+  background: var(--cyan); border-radius: 2px;
+  box-shadow: 0 0 8px var(--cyan);
+}
+.section h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.3rem, 2.6vw, 2.1rem); line-height: 1.24;
+  margin-bottom: 1.3rem; color: var(--chrome);
+  font-weight: 700; letter-spacing: 0.01em;
+}
+.hl-cd     { color: var(--cd);      text-shadow: 0 0 20px rgba(255,58,92,0.5); }
+.hl-vinyl  { color: var(--vinyl);   text-shadow: 0 0 20px rgba(168,85,247,0.4); }
+.hl-cassette { color: var(--cassette); text-shadow: 0 0 16px rgba(255,214,10,0.4); }
+.hl-stream { color: var(--cyan);    text-shadow: 0 0 20px rgba(0,229,255,0.5); }
+.section p {
+  font-size: 0.92rem; line-height: 1.85; color: var(--text-mid);
+  max-width: 580px; margin-bottom: 1rem;
+}
+.pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.pill {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.38rem 0.9rem; border-radius: 40px;
+  font-family: 'Orbitron', sans-serif; font-size: 0.56rem; font-weight: 700;
+  backdrop-filter: blur(8px); letter-spacing: 0.05em;
+}
+.pill-cd     { background: var(--cd-pale);  border: 1px solid rgba(255,58,92,0.38);  color: var(--cd-deep); }
+.pill-aqua   { background: var(--cyan-pale); border: 1px solid rgba(0,229,255,0.35); color: var(--cyan); }
+.pill-warn   { background: rgba(255,214,10,0.10); border: 1px solid rgba(255,214,10,0.32); color: var(--cassette); }
+.pill-vinyl  { background: rgba(168,85,247,0.10); border: 1px solid rgba(168,85,247,0.32); color: var(--purple); }
+.pill-stream { background: var(--pink-pale); border: 1px solid rgba(255,77,184,0.32); color: var(--pink); }
+.chart-wrap { padding: 1.6rem 1.4rem 1.2rem; margin-top: 2rem; }
+.chart-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.56rem; letter-spacing: 0.18em; color: var(--cyan);
+  text-transform: uppercase; font-weight: 700; margin-bottom: 1rem;
+}
+svg text { font-family: 'Nunito', sans-serif; }
+.scrubber-wrap { margin-top: 1.1rem; display: flex; align-items: center; gap: 1rem; }
+.scrubber-wrap label { font-family: 'Orbitron', sans-serif; font-size: 0.56rem; color: var(--text-muted); font-weight: 700; letter-spacing: 0.14em; white-space: nowrap; }
+#year-slider {
+  flex: 1; -webkit-appearance: none; height: 2px; border-radius: 4px;
+  background: linear-gradient(to right, rgba(0,229,255,0.22), var(--cyan));
+  outline: none; cursor: pointer;
+}
+#year-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--bg-1); border: 2px solid var(--cyan); cursor: pointer;
+  box-shadow: 0 0 12px rgba(0,229,255,0.55);
+}
+#year-display { font-family: 'Orbitron', sans-serif; font-size: 1rem; color: var(--cyan); font-weight: 900; min-width: 48px; text-align: right; text-shadow: 0 0 12px rgba(0,229,255,0.6); }
+.toggle-row { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.toggle-btn {
+  padding: 0.38rem 1rem; border-radius: 40px;
+  border: 1px solid rgba(0,229,255,0.28);
+  background: rgba(0,229,255,0.06); color: var(--text-muted);
+  font-family: 'Orbitron', sans-serif; font-size: 0.56rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s; backdrop-filter: blur(6px);
+  letter-spacing: 0.08em;
+}
+.toggle-btn.active {
+  background: rgba(0,229,255,0.14); border-color: var(--cyan); color: var(--cyan);
+  box-shadow: 0 0 16px rgba(0,229,255,0.28), inset 0 0 8px rgba(0,229,255,0.08);
+}
+.legend { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.8rem; }
+.legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.65rem; color: var(--text-muted); font-weight: 600; }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.milestone-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1rem; margin-top: 1.6rem; }
+.milestone-card { padding: 1.1rem 1.3rem; position: relative; overflow: hidden; border-radius: 14px; }
+.milestone-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; border-radius: 14px 14px 0 0;
+}
+.milestone-card.napster::after { background: var(--cd);     box-shadow: 0 0 10px var(--cd); }
+.milestone-card.itunes::after  { background: var(--dl);     box-shadow: 0 0 10px var(--dl); }
+.milestone-card.spotify::after { background: var(--stream); box-shadow: 0 0 10px var(--stream); }
+.milestone-year { font-family: 'Orbitron', sans-serif; font-size: 0.52rem; color: var(--cyan); letter-spacing: 0.18em; font-weight: 700; margin-bottom: 0.3rem; text-transform: uppercase; }
+.milestone-name { font-family: 'Orbitron', sans-serif; font-size: 0.88rem; margin-bottom: 0.5rem; color: var(--chrome); letter-spacing: 0.02em; font-weight: 700; }
+.milestone-desc { font-size: 0.74rem; color: var(--text-mid); line-height: 1.7; }
+.data-credit { position: fixed; bottom: 1rem; right: 1.3rem; font-family: 'Orbitron', sans-serif; font-size: 0.46rem; color: var(--text-muted); letter-spacing: 0.12em; font-weight: 700; z-index: 100; text-transform: uppercase; opacity: 0.5; }
+.fade-in { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+#outro { text-align: center; }
+</style>
+</head>
+<body>
+
+<nav class="nav-dots" id="navDots">
+  <div class="nav-dot active"></div>
+  <div class="nav-dot"></div>
+  <div class="nav-dot"></div>
+  <div class="nav-dot"></div>
+  <div class="nav-dot"></div>
+  <div class="nav-dot"></div>
+  <div class="nav-dot"></div>
+</nav>
+<span class="data-credit">Data · RIAA U.S. Sales Database 1973–2019</span>
+
+<!-- HERO -->
+<section id="hero">
+  <div id="disc-hero"></div>
+  <div id="hero-content">
+    <p class="hero-eyebrow">An interactive data story</p>
+    <h1 class="hero-title">The Disc That<br><em>Ruled the World</em></h1>
+    <p class="hero-sub">How the compact disc conquered music — and lost everything.</p>
+    <p class="hero-sub" style="font-size:0.68rem;margin-top:0.3rem;color:var(--text-light);">U.S. Recorded Music Revenue · 1973–2019</p>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</section>
+
+<!-- S1: BEFORE -->
+<section class="section" id="s1">
+  <div class="section-inner">
+    <div class="two-col">
+      <div class="fade-in">
+        <p class="chapter-label">Chapter 01 — Before the Disc</p>
+        <h2>A world of <span class="hl-vinyl">vinyl</span> and <span class="hl-cassette">tape</span></h2>
+        <p>Before the CD existed, the music industry was a battle of formats. Vinyl dominated the 1970s. 8-track cartridges surged, then died. By the early 1980s, the cassette and the Walkman had made portable music a reality for a generation.</p>
+        <p>Then in 1982, a silver disc changed everything.</p>
+        <div class="pills">
+          <span class="pill pill-vinyl">Vinyl ~50%+ share through 1984</span>
+          <span class="pill pill-warn">Cassette overtook Vinyl in 1984</span>
+          <span class="pill pill-aqua">8-Track dead by 1982</span>
+        </div>
+      </div>
+      <div class="fade-in" style="transition-delay:0.15s;">
+        <div class="chart-wrap glass">
+          <p class="chart-title">Format Revenue 1973–1989 (USD Millions)</p>
+          <svg id="chart-before" width="100%" height="260"></svg>
+          <div class="legend" id="legend-before"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S2: RISES -->
+<section class="section" id="s2">
+  <div class="section-inner fade-in">
+    <p class="chapter-label">Chapter 02 — The Silver Invasion</p>
+    <h2>The <span class="hl-cd">CD</span> takes over</h2>
+    <p>When Sony and Philips launched the compact disc in 1982, it was a curiosity. By 1987 it had overtaken vinyl. By 1991 it outsold cassettes. The sound was "perfect." Labels re-sold entire back catalogs to fans who already owned the albums — on CD.</p>
+    <p>Drag the scrubber to watch the CD's ascent in real time.</p>
+    <div class="chart-wrap glass-red">
+      <p class="chart-title">Market Share by Format — Scrub Through Time</p>
+      <div class="scrubber-wrap">
+        <label>YEAR</label>
+        <input type="range" id="year-slider" min="1973" max="2019" value="1982">
+        <span id="year-display">1982</span>
+      </div>
+      <svg id="chart-bar-race" width="100%" height="310" style="margin-top:1rem;"></svg>
+      <div class="legend" id="legend-bar"></div>
+    </div>
+  </div>
+</section>
+
+<!-- S3: PEAK -->
+<section class="section" id="s3">
+  <div class="section-inner">
+    <div class="two-col">
+      <div class="fade-in">
+        <p class="chapter-label">Chapter 03 — The Peak</p>
+        <h2>2000: <span class="hl-cd">$13 billion</span> on discs alone</h2>
+        <p>By 2002 the CD had captured nearly all physical music revenue — the most dominant any single format has ever been in U.S. history. The industry was making obscene money. Then a college dropout named Shawn Fanning launched Napster.</p>
+        <div class="pills">
+          <span class="pill pill-cd">CD peak revenue: $13.2B (2000)</span>
+          <span class="pill pill-cd">2002 — near-total CD dominance</span>
+          <span class="pill pill-warn">Napster launched: June 1999</span>
+        </div>
+      </div>
+      <div class="fade-in" style="transition-delay:0.15s;">
+        <div class="chart-wrap glass-red">
+          <p class="chart-title">CD Market Share Over Time (%)</p>
+          <svg id="chart-cd-share" width="100%" height="260"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S4: FALL -->
+<section class="section" id="s4">
+  <div class="section-inner fade-in">
+    <p class="chapter-label">Chapter 04 — Three Killers</p>
+    <h2>What <span class="hl-cd">killed</span> the disc</h2>
+    <p>The CD's collapse wasn't one event — it was a cascade. Three technologies, one after another, stripped away the economics that made CDs so profitable.</p>
+    <div class="milestone-grid">
+      <div class="milestone-card glass napster fade-in">
+        <p class="milestone-year">1999</p>
+        <p class="milestone-name" style="color:var(--cd);">Napster</p>
+        <p class="milestone-desc">Peer-to-peer file sharing made music free. CD sales fell 20% in two years. The labels sued — and won — but the damage was done.</p>
+      </div>
+      <div class="milestone-card glass itunes fade-in" style="transition-delay:0.1s;">
+        <p class="milestone-year">2003</p>
+        <p class="milestone-name" style="color:var(--leaf);">iTunes Store</p>
+        <p class="milestone-desc">Apple made paying cool again — but at $0.99 per song, not $15 per album. Revenue per listener collapsed. The album era ended.</p>
+      </div>
+      <div class="milestone-card glass spotify fade-in" style="transition-delay:0.2s;">
+        <p class="milestone-year">2011</p>
+        <p class="milestone-name" style="color:var(--stream);">Spotify US</p>
+        <p class="milestone-desc">All the music ever made for $9.99/month. Downloads collapsed. The CD became a rounding error. Revenue per stream: fractions of a cent.</p>
+      </div>
+    </div>
+    <div class="chart-wrap glass" style="margin-top:2rem;">
+      <p class="chart-title">Full Revenue History with Milestones (CD in red)</p>
+      <svg id="chart-full" width="100%" height="300"></svg>
+    </div>
+  </div>
+</section>
+
+<!-- S5: PARADOX -->
+<section class="section" id="s5">
+  <div class="section-inner">
+    <div class="two-col">
+      <div class="fade-in">
+        <p class="chapter-label">Chapter 05 — The Paradox</p>
+        <h2>More listeners.<br><span class="hl-stream">Less money.</span></h2>
+        <p>More people listen to more music today than ever. Spotify alone has 600 million users. But total U.S. music revenue in 2019 was still less than half its 2000 peak — even as listening hours multiplied.</p>
+        <p>Toggle between Revenue and Streaming Share to feel the disconnect.</p>
+        <div class="pills">
+          <span class="pill pill-stream">~$0.004 avg payout per stream</span>
+          <span class="pill pill-cd">Revenue still 45% below 2000 peak</span>
+          <span class="pill pill-vinyl">Vinyl outsells CDs since 2020</span>
+        </div>
+      </div>
+      <div class="fade-in" style="transition-delay:0.15s;">
+        <div class="chart-wrap glass">
+          <p class="chart-title">Revenue vs. Streaming Growth</p>
+          <div class="toggle-row">
+            <button class="toggle-btn active" id="btn-rev" onclick="setParadoxMode('revenue')">Revenue</button>
+            <button class="toggle-btn" id="btn-str" onclick="setParadoxMode('stream')">Streaming %</button>
+          </div>
+          <svg id="chart-paradox" width="100%" height="260"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTRO -->
+<section class="section" id="outro">
+  <div class="section-inner fade-in" style="max-width:680px;margin:0 auto;text-align:center;">
+    <p class="chapter-label" style="justify-content:center;">Fin</p>
+    <h2 style="font-size:clamp(1.6rem,4vw,2.6rem);">The disc is gone.<br>The <span class="hl-vinyl">record</span> lives on.</h2>
+    <div class="glass" style="max-width:540px;margin:2rem auto 0;padding:2rem 2.4rem;">
+      <p style="max-width:none;margin-bottom:0;">The compact disc ruled for two decades and funded the most profitable era in music history. It's now nearly extinct — outsold by the format it once buried: vinyl. The music industry survived. The CD didn't.</p>
+      <p style="color:var(--text-muted);font-size:0.72rem;margin:1.5rem 0 0;font-weight:700;">
+        Data: RIAA U.S. Recorded Music Revenue Database (1973–2019)<br>
+        Built by Hanish Komma · INST 334 · Project 3
+      </p>
+      <div style="margin-top:1.6rem;display:inline-block;padding:0.55rem 1.5rem;border-radius:40px;border:1px solid var(--cd);color:var(--cd-deep);font-size:0.56rem;font-weight:800;letter-spacing:0.18em;background:var(--cd-pale);font-family:'Orbitron',sans-serif;">
+        ◉ COMPACT DISC · 1982–2019
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const YEARS=Array.from({length:47},(_,i)=>1973+i);
+const RAW={
+  Vinyl:      [767,667,593,490,529,529,451,377,347,298,282,209,153,118,107,86,86,60,50,40,36,35,28,30,33,36,36,34,34,57,55,52,63,89,119,148,177,208,221,224,232],
+  Eight_Track:[489,549,583,678,811,814,777,704,529,308,179,120,50,9,3,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  Cassette:   [130,207,344,411,487,487,487,488,487,487,488,488,488,344,258,258,258,225,172,172,90,90,60,30,20,15,10,8,5,4,3,2,2,2,1,1,1,1,1,1,1],
+  CD:         [0,0,0,0,0,17,17,103,390,930,1594,2090,2588,3452,4338,5327,6511,8465,9377,9935,9915,11416,12816,13214,12909,12044,11233,11447,10520,9373,7452,5471,4319,3389,3101,2486,2141,1776,1445,1131,615],
+  Download:   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,227,687,1174,1540,1514,1395,1312,1072,864,665,478,328,213,131,80],
+  Streaming:  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,349,904,1656,2848,4360,6154],
+};
+const FORMATS=['CD','Vinyl','Cassette','Eight_Track','Download','Streaming'];
+const COLORS={CD:'#ff3a5c',Vinyl:'#a855f7',Cassette:'#ffd60a',Eight_Track:'#ff8c42',Download:'#00e5a0',Streaming:'#ff4db8'};
+const LABELS={CD:'CD',Vinyl:'Vinyl',Cassette:'Cassette',Eight_Track:'8-Track',Download:'Downloads',Streaming:'Streaming'};
+const DATA=YEARS.map((yr,i)=>{
+  const row={year:yr};let total=0;
+  FORMATS.forEach(f=>{row[f]=RAW[f][i]||0;total+=row[f];});
+  row.total=total;
+  FORMATS.forEach(f=>{row[f+'_share']=total>0?(row[f]/total*100):0;});
+  return row;
+});
+
+function getW(id){return document.getElementById(id).clientWidth||400;}
+function fmtM(v){return v>=1000?`$${(v/1000).toFixed(1)}B`:`$${Math.round(v)}M`;}
+function fmtP(v){return `${v.toFixed(1)}%`;}
+
+function skyGrid(svg,w,h,xSc,ySc){
+  if(xSc) xSc.ticks(8).forEach(t=>{
+    svg.append('line').attr('x1',xSc(t)).attr('x2',xSc(t)).attr('y1',0).attr('y2',h)
+      .attr('stroke','rgba(0,229,255,0.10)').attr('stroke-width',0.8).attr('opacity',1);
+  });
+  ySc.ticks(5).forEach(t=>{
+    svg.append('line').attr('x1',0).attr('x2',w).attr('y1',ySc(t)).attr('y2',ySc(t))
+      .attr('stroke','rgba(0,229,255,0.10)').attr('stroke-width',0.8).attr('opacity',1);
+  });
+}
+
+function milestonePin(svg,yr,label,color,xSc,h){
+  const px=xSc(yr);
+  svg.append('line').attr('x1',px).attr('x2',px).attr('y1',0).attr('y2',h)
+    .attr('stroke',color).attr('stroke-width',1.2).attr('stroke-dasharray','5,3').attr('opacity',0.85);
+  const bw=label.length*6.2+14;
+  const g=svg.append('g').attr('transform',`translate(${px+3},${h*0.04})`);
+  g.append('rect').attr('width',bw).attr('height',17).attr('rx',8.5)
+    .attr('fill','rgba(10,0,30,0.92)').attr('stroke',color).attr('stroke-width',1.2);
+  g.append('text').attr('x',bw/2).attr('y',11.5).attr('text-anchor','middle')
+    .attr('fill',color).attr('font-size','7.5px').attr('font-weight','800')
+    .attr('font-family','Orbitron,sans-serif').text(label);
+}
+
+function axisStyle(g){
+  g.select('.domain').attr('stroke','rgba(0,229,255,0.18)');
+  g.selectAll('text').attr('fill','rgba(160,180,210,0.75)').attr('font-size','9px').attr('font-family','Nunito,sans-serif');
+  g.selectAll('.tick line').remove();
+}
+function buildLegend(id,fmts){
+  const el=document.getElementById(id);if(!el)return;
+  el.innerHTML=fmts.map(f=>`<div class="legend-item"><div class="legend-dot" style="background:${COLORS[f]}"></div>${LABELS[f]}</div>`).join('');
+}
+
+// CHART 1 — BEFORE
+function drawBefore(){
+  const W=getW('chart-before'),H=260;
+  const m={top:8,right:10,bottom:28,left:56};
+  const w=W-m.left-m.right,h=H-m.top-m.bottom;
+  d3.select('#chart-before').selectAll('*').remove();
+  const svg=d3.select('#chart-before').attr('height',H).append('g').attr('transform',`translate(${m.left},${m.top})`);
+  const slice=DATA.filter(d=>d.year<=1989);
+  const fmts=['Vinyl','Eight_Track','Cassette','CD'];
+  const series=d3.stack().keys(fmts)(slice);
+  const x=d3.scaleLinear().domain([1973,1989]).range([0,w]);
+  const y=d3.scaleLinear().domain([0,d3.max(slice,d=>d.total)*1.08]).range([h,0]);
+  skyGrid(svg,w,h,x,y);
+  const area=d3.area().x(d=>x(d.data.year)).y0(d=>y(d[0])).y1(d=>y(d[1])).curve(d3.curveCatmullRom);
+  series.forEach(s=>{
+    svg.append('path').datum(s)
+      .attr('fill',COLORS[s.key]).attr('opacity',s.key==='CD'?0.92:0.72)
+      .attr('stroke',s.key==='CD'?'rgba(255,140,170,0.5)':'rgba(255,255,255,0.12)')
+      .attr('stroke-width',s.key==='CD'?1.2:0.5).attr('d',area);
+  });
+  svg.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(8)).call(axisStyle);
+  svg.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(fmtM)).call(axisStyle);
+  buildLegend('legend-before',['Vinyl','Eight_Track','Cassette','CD']);
+}
+
+// CHART 2 — BAR RACE
+function drawBarRace(year){
+  const W=getW('chart-bar-race'),H=310;
+  const m={top:6,right:64,bottom:6,left:88};
+  const w=W-m.left-m.right,h=H-m.top-m.bottom;
+  const row=DATA.find(d=>d.year===+year);if(!row)return;
+  const vals=FORMATS.map(f=>({key:f,val:row[f+'_share']})).filter(d=>d.val>0.4).sort((a,b)=>b.val-a.val);
+  d3.select('#chart-bar-race').selectAll('*').remove();
+  const svg=d3.select('#chart-bar-race').attr('height',H).append('g').attr('transform',`translate(${m.left},${m.top})`);
+  const y=d3.scaleBand().domain(vals.map(d=>d.key)).range([0,h]).padding(0.26);
+  const x=d3.scaleLinear().domain([0,100]).range([0,w]);
+  x.ticks(5).forEach(t=>{
+    svg.append('line').attr('x1',x(t)).attr('x2',x(t)).attr('y1',0).attr('y2',h)
+      .attr('stroke','rgba(0,229,255,0.10)').attr('stroke-width',0.8).attr('opacity',1);
+  });
+  vals.forEach(d=>{
+    const isCD=d.key==='CD';
+    const bh=y.bandwidth(), by=y(d.key), bw=x(d.val);
+    svg.append('rect').attr('x',0).attr('y',by).attr('width',bw).attr('height',bh)
+      .attr('fill',COLORS[d.key]).attr('rx',bh/2)
+      .attr('opacity',isCD?0.95:0.72)
+      .attr('stroke',isCD?'rgba(255,140,170,0.45)':'rgba(255,255,255,0.12)')
+      .attr('stroke-width',isCD?1.8:0.5);
+    if(isCD&&bw>8){
+      svg.append('rect').attr('x',3).attr('y',by+2).attr('width',Math.max(0,bw-6)).attr('height',bh*0.33)
+        .attr('fill','rgba(255,255,255,0.18)').attr('rx',(bh*0.33)/2);
+    }
+    svg.append('text').attr('x',-6).attr('y',by+bh/2).attr('dy','0.35em')
+      .attr('text-anchor','end').attr('fill',isCD?'#ff8aaa':'rgba(160,180,210,0.8)')
+      .attr('font-size','9px').attr('font-weight',isCD?'800':'600')
+      .attr('font-family','Nunito,sans-serif').text(LABELS[d.key]);
+    svg.append('text').attr('x',x(d.val)+5).attr('y',by+bh/2).attr('dy','0.35em')
+      .attr('fill',isCD?'#ff8aaa':COLORS[d.key])
+      .attr('font-size','9px').attr('font-weight',isCD?'800':'700')
+      .attr('font-family','Nunito,sans-serif').text(fmtP(d.val));
+  });
+  buildLegend('legend-bar',FORMATS);
+}
+document.getElementById('year-slider').addEventListener('input',function(){
+  const yr=+this.value;
+  document.getElementById('year-display').textContent=yr;
+  drawBarRace(yr);
+});
+drawBarRace(1982);
+
+// CHART 3 — CD SHARE
+function drawCDShare(){
+  const W=getW('chart-cd-share'),H=260;
+  const m={top:10,right:12,bottom:28,left:52};
+  const w=W-m.left-m.right,h=H-m.top-m.bottom;
+  d3.select('#chart-cd-share').selectAll('*').remove();
+  const svg=d3.select('#chart-cd-share').attr('height',H).append('g').attr('transform',`translate(${m.left},${m.top})`);
+  const cdS=DATA.map(d=>({year:d.year,val:d.CD_share}));
+  const x=d3.scaleLinear().domain([1973,2019]).range([0,w]);
+  const y=d3.scaleLinear().domain([0,105]).range([h,0]);
+  skyGrid(svg,w,h,x,y);
+  svg.append('rect').attr('x',x(1989)).attr('y',0).attr('width',x(2008)-x(1989)).attr('height',h)
+    .attr('fill','rgba(255,58,92,0.04)');
+  const defs=svg.append('defs');
+  const gr=defs.append('linearGradient').attr('id','csg').attr('x1','0').attr('y1','0').attr('x2','0').attr('y2','1');
+  gr.append('stop').attr('offset','0%').attr('stop-color','#ff3a5c').attr('stop-opacity',0.30);
+  gr.append('stop').attr('offset','100%').attr('stop-color','#ff3a5c').attr('stop-opacity',0.02);
+  svg.append('path').datum(cdS).attr('fill','url(#csg)')
+    .attr('d',d3.area().x(d=>x(d.year)).y0(h).y1(d=>y(d.val)).curve(d3.curveCatmullRom));
+  svg.append('path').datum(cdS).attr('fill','none').attr('stroke','#ff3a5c')
+    .attr('stroke-width',2.8).attr('d',d3.line().x(d=>x(d.year)).y(d=>y(d.val)).curve(d3.curveCatmullRom));
+  [[1999,'Napster','#ff3a5c'],[2003,'iTunes','#00e5a0'],[2011,'Spotify','#ff4db8']].forEach(([yr,lbl,col])=>milestonePin(svg,yr,lbl,col,x,h));
+  const pk=DATA.reduce((a,b)=>a.CD_share>b.CD_share?a:b);
+  svg.append('circle').attr('cx',x(pk.year)).attr('cy',y(pk.CD_share)).attr('r',5)
+    .attr('fill','#ff3a5c').attr('stroke','#0a001e').attr('stroke-width',2);
+  svg.append('text').attr('x',x(pk.year)).attr('y',y(pk.CD_share)-10).attr('text-anchor','middle')
+    .attr('fill','#ff8aaa').attr('font-size','8.5px').attr('font-weight','800').attr('font-family','Nunito,sans-serif')
+    .text(`${pk.CD_share.toFixed(1)}%`);
+  svg.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(8)).call(axisStyle);
+  svg.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(d=>d+'%')).call(axisStyle);
+}
+
+// CHART 4 — FULL
+function drawFull(){
+  const W=getW('chart-full'),H=300;
+  const m={top:10,right:12,bottom:28,left:56};
+  const w=W-m.left-m.right,h=H-m.top-m.bottom;
+  d3.select('#chart-full').selectAll('*').remove();
+  const svg=d3.select('#chart-full').attr('height',H).append('g').attr('transform',`translate(${m.left},${m.top})`);
+  const series=d3.stack().keys(FORMATS)(DATA);
+  const x=d3.scaleLinear().domain([1973,2019]).range([0,w]);
+  const y=d3.scaleLinear().domain([0,d3.max(DATA,d=>d.total)*1.06]).range([h,0]);
+  skyGrid(svg,w,h,x,y);
+  const area=d3.area().x(d=>x(d.data.year)).y0(d=>y(d[0])).y1(d=>y(d[1])).curve(d3.curveCatmullRom);
+  series.forEach(s=>{
+    const isCD=s.key==='CD';
+    svg.append('path').datum(s).attr('fill',COLORS[s.key])
+      .attr('opacity',isCD?0.92:0.70)
+      .attr('stroke',isCD?'rgba(255,140,170,0.45)':'rgba(255,255,255,0.10)')
+      .attr('stroke-width',isCD?1.2:0.4).attr('d',area);
+  });
+  [[1999,'Napster','#ff3a5c'],[2003,'iTunes','#00e5a0'],[2011,'Spotify','#ff4db8']].forEach(([yr,lbl,col])=>milestonePin(svg,yr,lbl,col,x,h));
+  svg.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(10)).call(axisStyle);
+  svg.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(fmtM)).call(axisStyle);
+}
+
+// CHART 5 — PARADOX
+let paradoxMode='revenue';
+function setParadoxMode(mode){
+  paradoxMode=mode;
+  document.getElementById('btn-rev').classList.toggle('active',mode==='revenue');
+  document.getElementById('btn-str').classList.toggle('active',mode==='stream');
+  drawParadox();
+}
+function drawParadox(){
+  const W=getW('chart-paradox'),H=260;
+  const m={top:10,right:12,bottom:28,left:56};
+  const w=W-m.left-m.right,h=H-m.top-m.bottom;
+  d3.select('#chart-paradox').selectAll('*').remove();
+  const svg=d3.select('#chart-paradox').attr('height',H).append('g').attr('transform',`translate(${m.left},${m.top})`);
+  const x=d3.scaleLinear().domain([1973,2019]).range([0,w]);
+  const defs=svg.append('defs');
+  if(paradoxMode==='revenue'){
+    const y=d3.scaleLinear().domain([0,d3.max(DATA,d=>d.total)*1.06]).range([h,0]);
+    skyGrid(svg,w,h,x,y);
+    const gr=defs.append('linearGradient').attr('id','rg').attr('x1','0').attr('y1','0').attr('x2','0').attr('y2','1');
+    gr.append('stop').attr('offset','0%').attr('stop-color','#00e5ff').attr('stop-opacity',0.25);
+    gr.append('stop').attr('offset','100%').attr('stop-color','#00e5ff').attr('stop-opacity',0.02);
+    svg.append('path').datum(DATA).attr('fill','url(#rg)')
+      .attr('d',d3.area().x(d=>x(d.year)).y0(h).y1(d=>y(d.total)).curve(d3.curveCatmullRom));
+    svg.append('path').datum(DATA).attr('fill','none').attr('stroke','#00e5ff').attr('stroke-width',2.8)
+      .attr('d',d3.line().x(d=>x(d.year)).y(d=>y(d.total)).curve(d3.curveCatmullRom));
+    svg.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(fmtM)).call(axisStyle);
+  } else {
+    const sd=DATA.map(d=>({year:d.year,val:d.total>0?(d.Streaming/d.total*100):0}));
+    const y=d3.scaleLinear().domain([0,100]).range([h,0]);
+    skyGrid(svg,w,h,x,y);
+    const gr=defs.append('linearGradient').attr('id','sg').attr('x1','0').attr('y1','0').attr('x2','0').attr('y2','1');
+    gr.append('stop').attr('offset','0%').attr('stop-color','#ff4db8').attr('stop-opacity',0.22);
+    gr.append('stop').attr('offset','100%').attr('stop-color','#ff4db8').attr('stop-opacity',0.02);
+    svg.append('path').datum(sd).attr('fill','url(#sg)')
+      .attr('d',d3.area().x(d=>x(d.year)).y0(h).y1(d=>y(d.val)).curve(d3.curveCatmullRom));
+    svg.append('path').datum(sd).attr('fill','none').attr('stroke','#ff4db8').attr('stroke-width',2.8)
+      .attr('d',d3.line().x(d=>x(d.year)).y(d=>y(d.val)).curve(d3.curveCatmullRom));
+    svg.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(d=>d+'%')).call(axisStyle);
+  }
+  svg.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(8)).call(axisStyle);
+}
+
+// NAV
+const sections=['hero','s1','s2','s3','s4','s5','outro'];
+const dots=document.querySelectorAll('.nav-dot');
+dots.forEach((dot,i)=>dot.addEventListener('click',()=>document.getElementById(sections[i]).scrollIntoView({behavior:'smooth'})));
+function updateDots(){
+  const sy=window.scrollY+window.innerHeight*0.4;
+  sections.forEach((id,i)=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(el.offsetTop<=sy&&el.offsetTop+el.offsetHeight>sy){dots.forEach(d=>d.classList.remove('active'));dots[i].classList.add('active');}
+  });
+}
+window.addEventListener('scroll',updateDots);
+
+// FADE IN
+document.querySelectorAll('.fade-in').forEach(f=>{
+  new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+  },{threshold:0.12}).observe(f);
+});
+
+window.addEventListener('resize',()=>{
+  drawBefore();drawBarRace(+document.getElementById('year-slider').value);
+  drawCDShare();drawFull();drawParadox();
+});
+document.fonts.ready.then(()=>setTimeout(()=>{
+  drawBefore();drawBarRace(1982);drawCDShare();drawFull();drawParadox();
+},80));
+</script>
+</body>
+</html>
