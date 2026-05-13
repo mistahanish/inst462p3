@@ -566,19 +566,28 @@
                 letter-spacing: 0.08em;
                 text-transform: uppercase;
             }
-            .outro-quote {
-                max-width: 540px;
-                margin: 2rem auto 0;
-                padding: 1.5rem 1.6rem;
-                border-left: 2px solid var(--orange);
-                background: var(--orange-pale);
-                box-shadow: -8px 0 24px rgba(255, 85, 0, 0.05);
-                text-align: left;
+            .outro-discs {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 2.5rem;
+                margin-top: 3rem;
             }
-            .outro-quote p {
-                font-size: 0.88rem;
-                line-height: 1.88;
-                color: var(--text-dim);
+            .outro-disc {
+                animation: spin 12s linear infinite;
+                filter: drop-shadow(0 0 24px rgba(255, 85, 0, 0.22));
+            }
+            .outro-disc:nth-child(1) {
+                width: 120px;
+                height: 120px;
+            }
+            .outro-disc:nth-child(2) {
+                width: 180px;
+                height: 180px;
+            }
+            .outro-disc:nth-child(3) {
+                width: 120px;
+                height: 120px;
             }
             .outro-sig {
                 margin-top: 2rem;
@@ -642,7 +651,7 @@
                 </h2>
                 <p class="body-text">
                     Every decade brought a new way to carry music. Each format
-                    promised better sound, more convenience, or both — until the
+                    promised better sound, more convenience, or both until the
                     next one made it obsolete. Hover over a format to see what
                     it meant.
                 </p>
@@ -657,14 +666,12 @@
         <section id="s-market" class="fade-in">
             <div class="s-divider"></div>
             <div class="fade-in">
-                <h2>
-                    The <span class="hl">CD</span> takes over — then collapses
-                </h2>
+                <h2>The <span class="hl">CD</span> takes over, then falls</h2>
                 <p class="body-text">
                     In 1983 the CD had 0.5% of the U.S. market. By 2002 it owned
-                    98% of physical music revenue. Then Napster, iTunes, and
-                    Spotify dismantled it in under a decade. Drag to scrub
-                    through time.
+                    98% of physical music revenue. Then services like Napster,
+                    iTunes, and Spotify overtook it in under a decade. Drag to
+                    scrub through time.
                 </p>
                 <div class="chart-wrap">
                     <p class="chart-title">
@@ -698,10 +705,10 @@
             <div class="fade-in">
                 <h2>What did a <span class="hl">CD</span> actually cost?</h2>
                 <p class="body-text">
-                    CDs launched in 1983 at $21.50 per disc — wildly expensive.
-                    Over two decades the price fell, but never enough to stop
-                    people buying hundreds of millions. Scrub to see what that
-                    money was worth in today's dollars.
+                    CDs launched in 1983 at $21.50 per disc, which was wildly
+                    expensive. Over two decades the price fell, but never enough
+                    to stop people buying hundreds of millions. Scrub to see
+                    what that money was worth in today's dollars.
                 </p>
                 <div class="price-callout" id="price-callout">
                     <div class="price-box">
@@ -765,7 +772,7 @@
                 <p class="body-text">
                     Streaming compresses audio by throwing data away. Premium
                     streaming at 320 kbps keeps less than a quarter of what a CD
-                    stores. Each dot below represents a unit of audio data — see
+                    stores. Each dot below represents a unit of audio data, see
                     what gets discarded.
                 </p>
                 <div class="chart-wrap" style="max-width: 700px">
@@ -797,76 +804,32 @@
                 <h2>Physical media is <span class="hl">coming back</span></h2>
                 <p class="body-text">
                     Streaming won the mainstream. But something surprising is
-                    happening: physical media is growing again. Vinyl is
-                    outselling CDs in the U.S. for the first time since the
-                    1980s. Cassette sales hit a 35-year high. Japan never
-                    stopped buying CDs.
+                    happening: physical media has recently been growing again.
+                    Vinyl is outselling CDs in the U.S. for the first time since
+                    the 1980s. This means the CD may not be dead. With its high
+                    audio quality features, it might only be a little while
+                    longer unitl they make a come back too.
                 </p>
-                <div class="stats-grid">
-                    <div class="stat-card fade-in">
-                        <div class="stat-card-num">$1.2B</div>
-                        <div class="stat-card-label">
-                            Vinyl revenue in 2022, highest since 1987
-                        </div>
-                        <div class="stat-card-sub">
-                            RIAA Midyear 2023 Report
-                        </div>
-                    </div>
-                    <div
-                        class="stat-card fade-in"
-                        style="transition-delay: 0.08s"
-                    >
-                        <div class="stat-card-num">41M</div>
-                        <div class="stat-card-label">
-                            Vinyl albums sold in the U.S. in 2023
-                        </div>
-                        <div class="stat-card-sub">
-                            18 consecutive years of growth
-                        </div>
-                    </div>
-                    <div
-                        class="stat-card fade-in"
-                        style="transition-delay: 0.16s"
-                    >
-                        <div class="stat-card-num">100M+</div>
-                        <div class="stat-card-label">
-                            CDs still sold every year in Japan
-                        </div>
-                        <div class="stat-card-sub">
-                            Physical at 70% of Japanese market
-                        </div>
-                    </div>
-                    <div
-                        class="stat-card fade-in"
-                        style="transition-delay: 0.24s"
-                    >
-                        <div class="stat-card-num">363K</div>
-                        <div class="stat-card-label">
-                            Cassette tapes sold in the U.S. in 2022
-                        </div>
-                        <div class="stat-card-sub">
-                            35-year high · boutique &amp; limited edition
-                        </div>
-                    </div>
+                <div class="outro-discs fade-in" style="transition-delay: 0.2s">
+                    <img
+                        src="cd.png"
+                        alt=""
+                        class="outro-disc"
+                        style="animation-duration: 14s"
+                    />
+                    <img
+                        src="cd.png"
+                        alt=""
+                        class="outro-disc"
+                        style="animation-duration: 10s"
+                    />
+                    <img
+                        src="cd.png"
+                        alt=""
+                        class="outro-disc"
+                        style="animation-duration: 18s"
+                    />
                 </div>
-                <div
-                    class="outro-quote fade-in"
-                    style="transition-delay: 0.32s"
-                >
-                    <p>
-                        The streaming era made music abundant and revenue thin.
-                        But for listeners who want the full experience — the
-                        artwork, the ritual, the uncompressed sound — physical
-                        media never really went away. The disc that ruled the
-                        world may be a niche product now. But it's a niche
-                        that's growing.
-                    </p>
-                </div>
-                <p class="outro-sig">
-                    Data: RIAA U.S. Recorded Music Revenue Database
-                    (1973–2019)<br />
-                    Built by Hanish Komma · INST 462 · Project 3
-                </p>
             </div>
         </section>
 
@@ -1109,7 +1072,7 @@
                     format: "Compact Disc",
                     label: "CD",
                     highlight: false,
-                    desc: "Sony & Philips co-launch the CD. 74 minutes of digital audio. No surface noise. 'Perfect Sound Forever.' It dominates for 20 years.",
+                    desc: "Sony & Philips co-launch the CD. 74 minutes of digital audio. No surface noise. It dominates for 20 years.",
                     icon: `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                         <circle cx="18" cy="18" r="15"/>
                         <circle cx="18" cy="18" r="11"/>
