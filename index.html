@@ -206,9 +206,10 @@
                 font-family: var(--mono);
                 font-size: 0.62rem;
                 letter-spacing: 0.16em;
-                color: var(--orange-dim);
+                color: var(--orange);
                 text-transform: uppercase;
                 margin-bottom: 1rem;
+                text-align: left;
             }
 
             /* ════════════════════ HERO ════════════════════ */
@@ -585,6 +586,14 @@
                 width: 180px;
                 height: 180px;
             }
+            .outro-thanks {
+                margin-top: 2.4rem;
+                font-size: 0.82rem;
+                font-weight: 200;
+                color: var(--text);
+                letter-spacing: 0.06em;
+                text-align: center;
+            }
             .outro-disc:nth-child(3) {
                 width: 120px;
                 height: 120px;
@@ -617,9 +626,6 @@
     <body>
         <div class="side-bar side-bar-left"></div>
         <div class="side-bar side-bar-right"></div>
-        <span class="data-credit"
-            >Data · RIAA U.S. Sales Database 1973–2019</span
-        >
 
         <nav class="nav-dots" id="navDots">
             <div class="nav-dot active"></div>
@@ -636,8 +642,19 @@
             <img src="cd.png" alt="Compact Disc" class="hero-disc" />
             <h1 class="hero-title">Compact <span class="hl">Discs</span></h1>
             <p class="hero-sub">
-                U.S. Recorded Music Revenue &middot; 1973–2019 &middot; RIAA
-                Data
+                <a
+                    href="https://www.kaggle.com/datasets/andrewmvd/music-sales"
+                    target="_blank"
+                    rel="noopener"
+                    style="
+                        color: inherit;
+                        text-decoration: underline;
+                        text-underline-offset: 3px;
+                        opacity: 0.7;
+                    "
+                    >U.S. Recorded Music Revenue &middot; 1973–2019 &middot;
+                    RIAA Data</a
+                >
             </p>
             <p class="scroll-cue">Scroll to explore</p>
         </section>
@@ -650,10 +667,10 @@
                     Media Storage:<br />the <span class="hl">format wars</span>
                 </h2>
                 <p class="body-text">
-                    Every decade brought a new way to carry music. Each format
-                    promised better sound, more convenience, or both until the
-                    next one made it obsolete. Hover over a format to see what
-                    it meant.
+                    Every decade brought a new way to listen to music. Each
+                    format promised better sound, more convenience, or both
+                    until the next one made it obsolete. <b>Hover</b> over a
+                    format to see what it meant.
                 </p>
                 <div class="timeline-container">
                     <div class="timeline-line"></div>
@@ -670,12 +687,12 @@
                 <p class="body-text">
                     In 1983 the CD had 0.5% of the U.S. market. By 2002 it owned
                     98% of physical music revenue. Then services like Napster,
-                    iTunes, and Spotify overtook it in under a decade. Drag to
-                    scrub through time.
+                    iTunes, and Spotify overtook it in around a decade. Drag to
+                    <b>scrub</b> through time.
                 </p>
                 <div class="chart-wrap">
                     <p class="chart-title">
-                        Market Share by Format — Scrub Through Time
+                        Bar Graph of Market Share by Format, Scrub Through Time
                     </p>
                     <div class="scrubber-wrap">
                         <label>Year</label>
@@ -706,9 +723,12 @@
                 <h2>What did a <span class="hl">CD</span> actually cost?</h2>
                 <p class="body-text">
                     CDs launched in 1983 at $21.50 per disc, which was wildly
-                    expensive. Over two decades the price fell, but never enough
-                    to stop people buying hundreds of millions. Scrub to see
-                    what that money was worth in today's dollars.
+                    expensive. People bought them anyway, but over two decades
+                    we can see why streaming took over. Even if the price of a
+                    CD fell over time, it was hard to beat a $10 subscription a
+                    month price streaming gives you, while also giving you an
+                    entire library of music. You can <b>scrub</b> to see what
+                    that money was worth in today's dollars.
                 </p>
                 <div class="price-callout" id="price-callout">
                     <div class="price-box">
@@ -736,9 +756,12 @@
                         <p class="price-box-sub">shipped that year</p>
                     </div>
                 </div>
-                <div class="chart-wrap fade-in" style="transition-delay: 0.12s">
+                <div
+                    class="chart-wrap fade-in"
+                    style="transition-delay: 0.12s; max-width: 930px"
+                >
                     <p class="chart-title">
-                        Average CD Price per Unit — Nominal vs.
+                        Line Graph of Average CD Price per Unit. Nominal vs.
                         Inflation-Adjusted
                     </p>
                     <div class="scrubber-wrap">
@@ -757,7 +780,7 @@
                     <svg
                         id="chart-price"
                         width="100%"
-                        height="220"
+                        height="330"
                         style="margin-top: 0.8rem"
                     ></svg>
                 </div>
@@ -768,7 +791,9 @@
         <section id="s-quality" class="fade-in">
             <div class="s-divider"></div>
             <div class="fade-in">
-                <h2>What are you <span class="hl">actually</span> hearing?</h2>
+                <h2>
+                    But what are you <span class="hl">actually</span> hearing?
+                </h2>
                 <p class="body-text">
                     Streaming compresses audio by throwing data away. Premium
                     streaming at 320 kbps keeps less than a quarter of what a CD
@@ -777,12 +802,12 @@
                 </p>
                 <div class="chart-wrap" style="max-width: 700px">
                     <p class="chart-title">
-                        Every dot is audio data &mdash; dim dots are what
+                        Every dot is audio data. The dimmmer dots are what
                         streaming discards
                     </p>
                     <svg id="chart-quality" width="100%" height="360"></svg>
                 </div>
-                <p
+                <!--<p
                     class="body-text"
                     style="
                         margin-top: 1.1rem;
@@ -793,7 +818,7 @@
                     * CD lossless PCM at 1,411 kbps vs. premium streaming at 320
                     kbps. Streaming discards ~77% of the original signal through
                     lossy compression.
-                </p>
+                </p>-->
             </div>
         </section>
 
@@ -803,12 +828,19 @@
             <div class="fade-in">
                 <h2>Physical media is <span class="hl">coming back</span></h2>
                 <p class="body-text">
-                    Streaming won the mainstream. But something surprising is
-                    happening: physical media has recently been growing again.
-                    Vinyl is outselling CDs in the U.S. for the first time since
-                    the 1980s. This means the CD may not be dead. With its high
-                    audio quality features, it might only be a little while
-                    longer unitl they make a come back too.
+                    Streaming might have won the mainstream. But something
+                    surprising is happening: physical media has recently been
+                    growing again. Vinyl has been recently getting increasing
+                    amounts of sales from all types of people. This means the CD
+                    may not be dead. With its high audio quality features, it
+                    might only be a little while longer until they make a come
+                    back too.
+                    <!--Moreover, CDs don't just have to be for music. An
+                    average CD roughly holds 700mb of data. This means it can
+                    lead to a variety of projects or store certain things. My
+                    end goal is to create projects that can fit on CDs only,
+                    nothing larger than that. Optimization is key. Projects
+                    coming soon!-->
                 </p>
                 <div class="outro-discs fade-in" style="transition-delay: 0.2s">
                     <img
@@ -830,6 +862,9 @@
                         style="animation-duration: 18s"
                     />
                 </div>
+                <p class="outro-thanks fade-in" style="transition-delay: 0.4s">
+                    thank you for scrolling, built with love by hanish vadlamudi
+                </p>
             </div>
         </section>
 
@@ -838,6 +873,8 @@
             // DATA — loaded from musicdata.csv.xls
             // ══════════════════════════════════════════════════════
             let DATA = [];
+            let priceChartAnimated = false;
+            let priceChartShouldAnimate = false;
 
             document.querySelectorAll(".chart-wrap").forEach((el) => {
                 el.style.opacity = "0.3";
@@ -1031,7 +1068,7 @@
                     format: "Vinyl LP",
                     label: "Vinyl LP",
                     highlight: false,
-                    desc: "Columbia Records unveils the 33⅓ RPM long-play record. Up to 30 minutes per side, warm analog sound. Defined music for 30 years.",
+                    desc: "Columbia Records unveils the long play record. Around 30 minutes per side, with warm analog sound. Defined music for a substantial amount of time.",
                     icon: `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                         <circle cx="18" cy="18" r="15"/>
                         <circle cx="18" cy="18" r="9"/>
@@ -1044,7 +1081,7 @@
                     format: "8-Track",
                     label: "8-Track",
                     highlight: false,
-                    desc: "RCA Victor's tape cartridge takes over cars and dens. 8 programs of stereo sound. No rewind. The format lasted barely 15 years.",
+                    desc: "RCA Victor's tape cartridge comes out. 8 programs of stereo sound. But there is no rewind. This format lasts barely 15 years.",
                     icon: `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="7" width="30" height="22" rx="2"/>
                         <circle cx="12" cy="19" r="5"/>
@@ -1058,7 +1095,7 @@
                     format: "Cassette",
                     label: "Cassette",
                     highlight: false,
-                    desc: "Philips' compact cassette goes mainstream. Portability kills the 8-track. The Walkman makes music truly personal in 1979.",
+                    desc: "Philips compact cassette goes mainstream. Portability kills the 8-track. The Walkman comes out in 1979 using this form factor.",
                     icon: `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="8" width="32" height="20" rx="2"/>
                         <circle cx="11" cy="18" r="4.5"/>
@@ -1072,7 +1109,7 @@
                     format: "Compact Disc",
                     label: "CD",
                     highlight: false,
-                    desc: "Sony & Philips co-launch the CD. 74 minutes of digital audio. No surface noise. It dominates for 20 years.",
+                    desc: "Sony & Philips co-launch the CD. 74 minutes of digital audio. No surface noise. It dominates for 20ish years. Holds around 700 mb of data.",
                     icon: `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                         <circle cx="18" cy="18" r="15"/>
                         <circle cx="18" cy="18" r="11"/>
@@ -1085,7 +1122,7 @@
                     format: "MP3 / Download",
                     label: "MP3",
                     highlight: false,
-                    desc: "Napster launches P2P file sharing. The CD's slow death begins. iTunes Store (2003) turns it legal at $0.99/song.",
+                    desc: "Napster launches P2P file sharing. The CD's slow death begins around here. The iTunes Store (2003) turns it legal at $0.99/song.",
                     icon: `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="4" x2="18" y2="24"/>
                         <polyline points="10,17 18,25 26,17"/>
@@ -1099,7 +1136,7 @@
                     format: "Streaming",
                     label: "Stream",
                     highlight: false,
-                    desc: "Spotify launches in Europe, hits the U.S. in 2011. All music for $9.99/month. Revenue per stream: $0.004. The CD never recovers.",
+                    desc: "Spotify launches in Europe, and comes to the U.S. in 2011. All the music you want for $9.99/month. Revenue per stream is around $0.004. The CD falls down.",
                     icon: `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                         <path d="M4 22 Q18 6 32 22"/>
                         <path d="M8 26 Q18 13 28 26"/>
@@ -1290,8 +1327,8 @@
 
             function drawPriceChart(highlightYear) {
                 const W = getW("chart-price"),
-                    H = 220;
-                const m = { top: 8, right: 8, bottom: 26, left: 46 };
+                    H = 330;
+                const m = { top: 8, right: 100, bottom: 26, left: 46 };
                 const w = W - m.left - m.right,
                     h = H - m.top - m.bottom;
                 d3.select("#chart-price").selectAll("*").remove();
@@ -1329,7 +1366,8 @@
                     .x((d) => x(d.year))
                     .y((d) => y(d.CD_price_adj))
                     .curve(d3.curveCatmullRom);
-                svg.append("path")
+                const adjPath = svg
+                    .append("path")
                     .datum(priceData)
                     .attr("fill", "none")
                     .attr("stroke", "rgba(255,85,0,0.28)")
@@ -1343,13 +1381,32 @@
                     .x((d) => x(d.year))
                     .y((d) => y(d.CD_price))
                     .curve(d3.curveCatmullRom);
-                svg.append("path")
+                const nomPath = svg
+                    .append("path")
                     .datum(priceData)
                     .attr("fill", "none")
                     .attr("stroke", "#ff5500")
                     .attr("stroke-width", 2)
                     .attr("filter", "url(#line-glow)")
                     .attr("d", lineNom);
+
+                if (!priceChartAnimated && priceChartShouldAnimate) {
+                    priceChartAnimated = true;
+                    [nomPath, adjPath].forEach((path) => {
+                        const len = path.node().getTotalLength();
+                        path.attr("stroke-dasharray", len)
+                            .attr("stroke-dashoffset", len)
+                            .transition()
+                            .duration(2200)
+                            .ease(d3.easeLinear)
+                            .attr("stroke-dashoffset", 0)
+                            .on("end", () => {
+                                // Restore dashed style for adj line after animation
+                                if (path === adjPath)
+                                    path.attr("stroke-dasharray", "4,3");
+                            });
+                    });
+                }
 
                 if (highlightYear) {
                     const hx = x(highlightYear);
@@ -1362,49 +1419,47 @@
                         .attr("stroke-width", 1)
                         .attr("opacity", 0.3);
                     const hr = DATA.find((d) => d.year === highlightYear);
+                    const labelX = hx + 8;
+                    const anchor = hx > w * 0.75 ? "end" : "start";
+                    const lox = anchor === "end" ? -14 : 8;
                     if (hr && hr.CD_price_adj) {
+                        const cy = y(hr.CD_price_adj);
                         svg.append("circle")
                             .attr("cx", hx)
-                            .attr("cy", y(hr.CD_price_adj))
+                            .attr("cy", cy)
                             .attr("r", 4.5)
                             .attr("fill", "rgba(255,85,0,0.4)")
                             .attr("stroke", "#1e1815")
                             .attr("stroke-width", 2);
+                        svg.append("text")
+                            .attr("x", hx + lox)
+                            .attr("y", cy - 8)
+                            .attr("text-anchor", anchor)
+                            .attr("fill", "rgba(255,85,0,0.6)")
+                            .attr("font-size", "10px")
+                            .attr("font-family", "'Albert Sans', sans-serif")
+                            .text("2024 dollars");
                     }
                     if (hr && hr.CD_price) {
+                        const cy = y(hr.CD_price);
                         svg.append("circle")
                             .attr("cx", hx)
-                            .attr("cy", y(hr.CD_price))
+                            .attr("cy", cy)
                             .attr("r", 4.5)
                             .attr("fill", "#ff5500")
                             .attr("stroke", "#1e1815")
                             .attr("stroke-width", 2)
                             .attr("filter", "url(#line-glow)");
+                        svg.append("text")
+                            .attr("x", hx + lox)
+                            .attr("y", cy - 8)
+                            .attr("text-anchor", anchor)
+                            .attr("fill", "#ff5500")
+                            .attr("font-size", "10px")
+                            .attr("font-family", "'Albert Sans', sans-serif")
+                            .text("Nominal price");
                     }
                 }
-
-                // Inline legend
-                [
-                    ["Nominal price", "#ff5500", false],
-                    ["2024 dollars", "rgba(255,85,0,0.55)", true],
-                ].forEach(([label, stroke, dashed], i) => {
-                    const ox = i * 145;
-                    svg.append("line")
-                        .attr("x1", ox)
-                        .attr("x2", ox + 16)
-                        .attr("y1", 6)
-                        .attr("y2", 6)
-                        .attr("stroke", stroke)
-                        .attr("stroke-width", i === 0 ? 2 : 1.5)
-                        .attr("stroke-dasharray", dashed ? "4,3" : null);
-                    svg.append("text")
-                        .attr("x", ox + 20)
-                        .attr("y", 10)
-                        .attr("fill", "rgba(255,245,232,0.65)")
-                        .attr("font-size", "10px")
-                        .attr("font-family", "'Albert Sans', sans-serif")
-                        .text(label);
-                });
 
                 svg.append("g")
                     .attr("transform", `translate(0,${h})`)
@@ -1462,21 +1517,25 @@
                     streamSet.add(Math.round(k * step));
                 }
 
-                // Glow filter for CD dots
+                // Glow filters
                 const defs = svg.append("defs");
-                const gf = defs
-                    .append("filter")
-                    .attr("id", "p-glow")
-                    .attr("x", "-50%")
-                    .attr("y", "-50%")
-                    .attr("width", "200%")
-                    .attr("height", "200%");
-                gf.append("feGaussianBlur")
-                    .attr("stdDeviation", "1.5")
-                    .attr("result", "blur");
-                const gm = gf.append("feMerge");
-                gm.append("feMergeNode").attr("in", "blur");
-                gm.append("feMergeNode").attr("in", "SourceGraphic");
+                function makeGlow(id, blur) {
+                    const gf = defs
+                        .append("filter")
+                        .attr("id", id)
+                        .attr("x", "-60%")
+                        .attr("y", "-60%")
+                        .attr("width", "220%")
+                        .attr("height", "220%");
+                    gf.append("feGaussianBlur")
+                        .attr("stdDeviation", blur)
+                        .attr("result", "blur");
+                    const gm = gf.append("feMerge");
+                    gm.append("feMergeNode").attr("in", "blur");
+                    gm.append("feMergeNode").attr("in", "SourceGraphic");
+                }
+                makeGlow("p-glow", "1.5");
+                makeGlow("p-glow-hover", "3.5");
 
                 function drawPanel(xOff, isCD) {
                     const dotData = d3.range(total).map((i) => ({
@@ -1487,7 +1546,11 @@
                             spacing / 2,
                         active: isCD || streamSet.has(i),
                     }));
-                    svg.selectAll(null)
+
+                    const g = svg.append("g");
+
+                    const circles = g
+                        .selectAll(null)
                         .data(dotData)
                         .join("circle")
                         .attr("cx", (d) => d.cx)
@@ -1502,7 +1565,54 @@
                         )
                         .attr("filter", (d) =>
                             d.active && isCD ? "url(#p-glow)" : null,
-                        );
+                        )
+                        .style("transition", "fill 0.3s, filter 0.3s");
+
+                    // Transparent hover rect over the full panel area
+                    const panelH2 = rows * spacing;
+                    g.append("rect")
+                        .attr("x", xOff)
+                        .attr("y", topPad)
+                        .attr("width", cols * spacing)
+                        .attr("height", panelH2)
+                        .attr("fill", "transparent")
+                        .style("cursor", "default")
+                        .on("mouseenter", () => {
+                            circles
+                                .transition()
+                                .duration(250)
+                                .attr("fill", (d) =>
+                                    d.active
+                                        ? isCD
+                                            ? "#ff7a00"
+                                            : "rgba(255,140,60,0.9)"
+                                        : isCD
+                                          ? "rgba(255,85,0,0.04)"
+                                          : "rgba(255,85,0,0.03)",
+                                )
+                                .attr("r", (d) =>
+                                    d.active ? dotR + 0.8 : dotR,
+                                )
+                                .attr("filter", (d) =>
+                                    d.active ? "url(#p-glow-hover)" : null,
+                                );
+                        })
+                        .on("mouseleave", () => {
+                            circles
+                                .transition()
+                                .duration(400)
+                                .attr("fill", (d) =>
+                                    d.active
+                                        ? isCD
+                                            ? "#ff5500"
+                                            : "rgba(255,110,40,0.65)"
+                                        : "rgba(255,85,0,0.07)",
+                                )
+                                .attr("r", dotR)
+                                .attr("filter", (d) =>
+                                    d.active && isCD ? "url(#p-glow)" : null,
+                                );
+                        });
                 }
 
                 // Streaming panel (left)
@@ -1564,7 +1674,7 @@
                 lbl(
                     W / 2,
                     H - 10,
-                    `CD carries 4.4× more data  ·  streaming discards ${Math.round((1 - 320 / 1411) * 100)}% of the signal`,
+                    `CD carries 4.4× more data / streaming discards ${Math.round((1 - 320 / 1411) * 100)}% of the signal`,
                     "rgba(255,245,232,0.35)",
                     "10px",
                 );
@@ -1621,6 +1731,22 @@
                     { threshold: 0.05 },
                 ).observe(el);
             });
+
+            // Trigger price chart draw animation on scroll into view
+            new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((e) => {
+                        if (e.isIntersecting && !priceChartAnimated) {
+                            priceChartShouldAnimate = true;
+                            const yr =
+                                +document.getElementById("price-slider")
+                                    .value || 1983;
+                            drawPriceChart(yr);
+                        }
+                    });
+                },
+                { threshold: 0.2 },
+            ).observe(document.getElementById("s-price"));
 
             // ══════════════════════════════════════════════════════
             // INIT — called after CSV loads
